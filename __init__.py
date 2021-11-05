@@ -32,13 +32,17 @@ while True:
             exit()
 
         if keys[pygame.K_s]:
-            player.down()
+            if player.animate == False:
+                player.down()
         if keys[pygame.K_w]:
-            player.up()
+            if player.animate == False:
+                player.up()
         if keys[pygame.K_a]:
-            player.left()
+            if player.animate == False:
+                player.left()
         if keys[pygame.K_d]:
-            player.right()
+            if player.animate == False:
+                player.right()
 
     screen.blit(player.image, player.position())
     sprites.draw(screen)
