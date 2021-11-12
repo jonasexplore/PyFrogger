@@ -23,8 +23,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 
-        # self.direction = {'up': 180, 'down': 0, 'left': 270, 'right': 90}
-        # self.side = 'up'
+        self.direction = {'up': 180, 'down': 0, 'left': 270, 'right': 90}
+        self.side = 'up'
 
         self.animate = False
 
@@ -39,7 +39,12 @@ class Player(pygame.sprite.Sprite):
                 self.animate = False
             self.image = self.sprites[int(self.current)]
             # self.image = pygame.transform.rotate(
-            # self.image, self.direction[self.side])
+            #     self.image, self.direction[self.side])
+
+    def is_collide(self, object):
+        if self.rect.colliderect(object):
+            return True
+        return False
 
     def down(self):
         self.animate = True

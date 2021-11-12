@@ -20,7 +20,10 @@ sprites = pygame.sprite.Group()
 player = Player(sprite_dir=FROG_SPRITES_DIR, player_speed=PLAYER_SPEED)
 sprites.add(player)
 
-enemy = Enemy(sprite_dir=CAR_SPRITE_DIR)
+enemy = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=425, player_speed=5)
+enemy2 = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=395, player_speed=3)
+enemy3 = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=345, player_speed=4)
+enemy4 = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=295, player_speed=2)
 
 clock = pygame.time.Clock()
 
@@ -48,12 +51,23 @@ while True:
             if keys[pygame.K_d]:
                 player.right()
 
+    print(player.is_collide(enemy))
+    print(player.is_collide(enemy2))
+    print(player.is_collide(enemy3))
+    print(player.is_collide(enemy4))
+
     screen.blit(player.image, player.position())
     screen.blit(enemy.image, enemy.position())
+    screen.blit(enemy2.image, enemy2.position())
+    screen.blit(enemy3.image, enemy3.position())
+    screen.blit(enemy4.image, enemy4.position())
 
     sprites.draw(screen)
     sprites.update()
 
     enemy.update()
+    enemy2.update()
+    enemy3.update()
+    enemy4.update()
 
     pygame.display.flip()

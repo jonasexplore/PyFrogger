@@ -2,14 +2,14 @@ import pygame
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, sprite_dir, player_speed=4):
+    def __init__(self, sprite_dir, x_p, y_p, player_speed=4):
         pygame.sprite.Sprite.__init__(self)
         self.sprites = []
         self.sprite_dir = sprite_dir
         self.player_speed = player_speed
 
-        self.x = 220
-        self.y = 425
+        self.x = x_p
+        self.y = y_p
 
         self.sprites.append(pygame.image.load(f"{self.sprite_dir}"))
 
