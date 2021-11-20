@@ -21,7 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.current = 0
         self.image = self.sprites[self.current]
         self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
+        self.rect.topleft = (self.x, self.y)
+
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.direction = {'up': 180, 'down': 0, 'left': 270, 'right': 90}
         self.side = 'up'
