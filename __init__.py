@@ -6,24 +6,24 @@ from src.core.Enemy import Enemy
 from src.core.Player import Player
 
 from src.config.constants import *
+from src.config.default import *
 
 pygame.init()
 
-screen_width = 512
-screen_length = 500
 
-screen = pygame.display.set_mode((screen_width, screen_length))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('PyFrogger')
 
-sprites = pygame.sprite.Group()
 
 player = Player(sprite_dir=FROG_SPRITES_DIR, player_speed=PLAYER_SPEED)
-sprites.add(player)
+enemy = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=10, y_p=325, player_speed=5)
 
-enemy = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=425, player_speed=5)
-enemy2 = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=395, player_speed=3)
-enemy3 = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=345, player_speed=4)
-enemy4 = Enemy(sprite_dir=CAR_SPRITE_DIR, x_p=220, y_p=295, player_speed=2)
+allSprites = pygame.sprite.Group()
+allSprites.add(player)
+allSprites.add(enemy)
+
+enemyGroup = pygame.sprite.Group()
+enemyGroup.add(enemy)
 
 clock = pygame.time.Clock()
 
@@ -51,23 +51,10 @@ while True:
             if keys[pygame.K_d]:
                 player.right()
 
-    print(player.is_collide(enemy))
-    print(player.is_collide(enemy2))
-    print(player.is_collide(enemy3))
-    print(player.is_collide(enemy4))
+    collision = pygame.sprite.spritecollide(
+        player, enemyGroup, True, pygame.sprite.collide_mask)
 
-    screen.blit(player.image, player.position())
-    screen.blit(enemy.image, enemy.position())
-    screen.blit(enemy2.image, enemy2.position())
-    screen.blit(enemy3.image, enemy3.position())
-    screen.blit(enemy4.image, enemy4.position())
-
-    sprites.draw(screen)
-    sprites.update()
-
-    enemy.update()
-    enemy2.update()
-    enemy3.update()
-    enemy4.update()
+    allSprites.draw(screen)
+    allSprites.update()
 
     pygame.display.flip()

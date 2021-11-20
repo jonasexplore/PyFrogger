@@ -1,4 +1,5 @@
 import pygame
+from src.config.default import *
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -16,15 +17,15 @@ class Enemy(pygame.sprite.Sprite):
         self.current = 0
         self.image = self.sprites[self.current]
 
-        x, y = self.image.get_size()
-
         self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
+        self.rect.topleft = (self.x, self.y)
+
+        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
-        self.x += self.player_speed
-        if self.x > 486:
-            self.x = -46
+        self.rect.x += self.player_speed
+        if self.rect.topleft[0] > WIDTH:
+            self.rect.x = -200
 
     def position(self):
         return (self.x, self.y)
