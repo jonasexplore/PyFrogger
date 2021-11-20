@@ -12,3 +12,14 @@ A mecânica do jogo era simples, onde o jogador controla um sapo que deve atrave
 
 - Será usado o PyGame para o desenvolvimento do jogo.
 - Será usado o Github para o versionamento do código.
+
+## Requisitos
+
+- [x] Sprites
+- [x] Movimentação
+- [x] Colisão
+- [x] Enimigos
+- [ ] Ajustar tamanho das sprites
+- [ ] Criar sistema de vida
+- [ ] Criar menu inicial
+- [ ] Criar pontuação
