@@ -32,11 +32,8 @@ class Player(pygame.sprite.Sprite):
         print(self.x, self.y)
 
     def update(self):
-
         if self.animate == True:
             self.current += 0.7
-            # self.rect.topleft = self.x, self.y
-
             if self.current >= len(self.sprites):
                 self.current = 0
                 self.animate = False
@@ -53,8 +50,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.player_speed
         elif direction[pygame.K_w]:
             self.rect.y -= self.player_speed
-
-        print(self.rect.x, self.rect.y)
 
     def initialPosition(self):
         self.rect.x = self.x
