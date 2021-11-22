@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.sprites = []
         self.sprite_dir = FROG_SPRITES_DIR
         self.player_speed = PLAYER_SPEED
-        self.life = 3
+        self.life = MAX_PLAYER_LIFE
 
         self.x = 220
         self.y = 465
@@ -51,7 +51,6 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x += self.player_speed
         elif direction[pygame.K_w]:
             self.rect.y -= self.player_speed
-        print(self.rect.x, self.rect.y)
 
     def initialPosition(self):
         self.rect.x = self.x
