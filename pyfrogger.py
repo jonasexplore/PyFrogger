@@ -2,5 +2,8 @@ from src.data.core.Game import Game
 
 game = Game()
 
-while True:
-    game.update()
+while game.isRunning:
+    if game.selectedScreen == 'main_menu':
+        game.main_menu()
+    else:
+        game.start_game()
