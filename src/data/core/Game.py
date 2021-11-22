@@ -6,6 +6,9 @@ from sys import exit
 from src.config.default import *
 from src.config.constants import *
 
+from src.data.utils import showText
+from src.data.utils import showButton
+
 from src.data.components.Enemy import Enemy
 from src.data.components.Player import Player
 
@@ -44,28 +47,73 @@ allSprites.add(player)
 class Game:
     def __init__(self) -> None:
         pygame.init()
+        self.isRunning = True
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_PATH)
         self.saveFrogs = 0
+        self.selectedScreen = 'start_game'
 
         self.savePosX = [10, 120, 230, 340, 450]
         self.savePosY = 25
 
+        self.font = pygame.font.match_font(FONT)
+
         pygame.display.set_caption('PyFrogger')
 
-    def update(self):
-        self.clock.tick(MAX_TICK)
+    def exit():
+        pygame.quit()
+        exit()
 
-        self.screen.fill(BLACK_COLOR)
-        self.screen.blit(self.background, (0, 0))
+    def main_menu(self):
+        self.clock.tick(MAX_TICK)
+        self.screen.fill(MEDIUMSEAGREEN)
+
+        logo = pygame.image.load(LOGO)
+        logo_rect = logo.get_rect()
+        logo = pygame.transform.scale(
+            logo, (logo_rect.width/2, logo_rect.height/2))
+        logo_rect = logo_rect.move((WIDTH / 4, 30))
+
+        self.screen.blit(logo, logo_rect)
+
+        mx, my = pygame.mouse.get_pos()
+        btn_start = showButton(self, DARKGREEN, WIDTH / 2.5, HEIGHT / 2 - 30)
+        btn_exit = showButton(self, DARKGREEN, WIDTH / 2.5, HEIGHT / 2 + 30)
+
+        showText(self, 'START', 24, WHITE, WIDTH / 2 + 8, HEIGHT / 2 - 25)
+        showText(self, 'EXIT', 24, WHITE, WIDTH / 2 + 8, HEIGHT / 2 + 35)
+        showText(self, f"Esse jogo foi desenvolvido por",
+                 14, BLACK, WIDTH / 2, HEIGHT - 60)
+        showText(self, f"Jonas Brito, Estefanny David e Laryssa Bezerra",
+                 14, BLACK, WIDTH / 2, HEIGHT - 40)
 
         self.keys = pygame.key.get_pressed()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
+                self.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == pygame.BUTTON_LEFT:
+                    if btn_start.collidepoint(mx, my):
+                        self.selectedScreen = 'game_start'
+
+                    if btn_exit.collidepoint(mx, my):
+                        self.exit()
+
+        pygame.display.flip()
+
+    def start_game(self):
+        self.clock.tick(MAX_TICK)
+        self.screen.fill(BLACK)
+        self.screen.blit(self.background, (0, 0))
+
+        showText(self, f"Vida: {player.life}", 11, WHITE, 20, HEIGHT - 12)
+
+        self.keys = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.exit()
 
             if player.animate == False and player.life > 0:
                 if self.keys[pygame.K_s] or self.keys[pygame.K_w] or self.keys[pygame.K_a] or self.keys[pygame.K_d]:
