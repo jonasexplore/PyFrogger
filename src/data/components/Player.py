@@ -29,7 +29,6 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
         self.animate = False
-        print(self.x, self.y)
 
     def update(self):
         if self.animate == True:
