@@ -40,15 +40,18 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, direction):
         self.animate = True
-
         if direction[pygame.K_s]:
-            self.rect.y += self.player_speed
+            if (self.rect.y < 465):
+                self.rect.y += self.player_speed
         elif direction[pygame.K_a]:
-            self.rect.x -= self.player_speed
+            if (self.rect.x > -8):
+                self.rect.x -= self.player_speed
         elif direction[pygame.K_d]:
-            self.rect.x += self.player_speed
+            if (self.rect.x < 448):
+                self.rect.x += self.player_speed
         elif direction[pygame.K_w]:
             self.rect.y -= self.player_speed
+        print(self.rect.x, self.rect.y)
 
     def initialPosition(self):
         self.rect.x = self.x
