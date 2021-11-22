@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-
 from sys import exit
 
 from src.config.default import *
@@ -52,7 +51,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_PATH)
         self.saveFrogs = 0
-        self.selectedScreen = 'start_game'
+        self.selectedScreen = screens.MAIN_MENU
+        self.start_ticks = 0
+        self.finishTime = 0
 
         self.savePosX = [10, 120, 230, 340, 450]
         self.savePosY = 25
@@ -65,7 +66,13 @@ class Game:
         pygame.quit()
         exit()
 
+    def initialize(self):
+        self.start_ticks = 0
+        self.saveFrogs = 0
+        player.life = 3
+
     def main_menu(self):
+        self.initialize()
         self.clock.tick(MAX_TICK)
         self.screen.fill(MEDIUMSEAGREEN)
 
@@ -80,7 +87,8 @@ class Game:
         mx, my = pygame.mouse.get_pos()
         btn_start = showButton(self, DARKGREEN, WIDTH / 2.5, HEIGHT / 2 - 30)
         btn_exit = showButton(self, DARKGREEN, WIDTH / 2.5, HEIGHT / 2 + 30)
-
+        showText(
+            self, f"Tempo da última partida: {self.finishTime} segundos!", 16, BLACK, WIDTH / 2 + 8, 120)
         showText(self, 'START', 24, WHITE, WIDTH / 2 + 8, HEIGHT / 2 - 25)
         showText(self, 'EXIT', 24, WHITE, WIDTH / 2 + 8, HEIGHT / 2 + 35)
         showText(self, f"Esse jogo foi desenvolvido por",
@@ -96,7 +104,7 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
                     if btn_start.collidepoint(mx, my):
-                        self.selectedScreen = 'game_start'
+                        self.selectedScreen = screens.START_GAME
 
                     if btn_exit.collidepoint(mx, my):
                         self.exit()
@@ -108,7 +116,12 @@ class Game:
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (0, 0))
 
+        if (self.start_ticks == 0):
+            self.start_ticks = pygame.time.get_ticks()
+
         showText(self, f"Vida: {player.life}", 11, WHITE, 20, HEIGHT - 12)
+        showText(
+            self, f"Tempo: {(pygame.time.get_ticks()-self.start_ticks)/1000}", 11, WHITE, 80, HEIGHT - 12)
 
         self.keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -124,6 +137,12 @@ class Game:
                           player_speed=0, sprite_dir=FROG_SPRITE_DIR)
             allSprites.add(enemy)
             self.saveFrogs += 1
+
+            if self.saveFrogs == 5:
+                self.finishTime = (pygame.time.get_ticks() -
+                                   self.start_ticks)/1000
+                self.selectedScreen = screens.MAIN_MENU
+
             player.initialPosition()
 
         collision = pygame.sprite.spritecollide(
