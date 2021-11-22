@@ -13,26 +13,33 @@ from src.data.components.Player import Player
 
 allSprites = pygame.sprite.Group()
 enemyGroup = pygame.sprite.Group()
+savedFrogs = pygame.sprite.Group()
 
-player = Player()
+# Enimies spawn
+enemiesSprites = [
+    CAR_SPRITE_DIR, CAR_SPRITE_DIR,
+    CAR_SPRITE_DIR, CAR_SPRITE_DIR,
+    CAR_SPRITE_DIR, CAR_SPRITE_DIR,
+    CAR_SPRITE_DIR, CAR_SPRITE_DIR,
+    FLY_SPRITE_DIR, FLY_SPRITE_DIR,
+    FLY_SPRITE_DIR, FLY_SPRITE_DIR]
 
+enimiesPosX = [
+    -330, -160, 50, -100,
+    -100, -10, -150, -10,
+    -10, -100, -150, -10]
 
-enemiesSprites = [CAR_SPRITE_DIR, CAR_SPRITE_DIR,
-                  CAR_SPRITE_DIR, CAR_SPRITE_DIR,
-                  CAR_SPRITE_DIR, CAR_SPRITE_DIR,
-                  CAR_SPRITE_DIR, CAR_SPRITE_DIR,
-                  FLY_SPRITE_DIR, FLY_SPRITE_DIR,
-                  FLY_SPRITE_DIR, FLY_SPRITE_DIR]
-enemiesPositionsStartX = [-330, -160, 50, -100, -
-                          100, -10, -150, -10, -10, -100, -150, -10]
-enemiesPositionsStartY = [427, 427, 427, 389,
-                          351, 313, 285, 285, 199, 161, 123, 85]
+enimiesPosY = [
+    427, 427, 427, 389,
+    351, 313, 285, 285,
+    199, 161, 123, 85]
+
 enemiesSpeed = [5, 5, 5, 4, 3, 3, 2, 2, 3, 4, 5, 4]
 
-for i in range(0, len(enemiesPositionsStartX)):
+for i in range(0, len(enimiesPosX)):
     enemy = Enemy(
-        x=enemiesPositionsStartX[i],
-        y=enemiesPositionsStartY[i],
+        x=enimiesPosX[i],
+        y=enimiesPosY[i],
         player_speed=enemiesSpeed[i],
         sprite_dir=enemiesSprites[i]
     )
@@ -40,6 +47,7 @@ for i in range(0, len(enemiesPositionsStartX)):
     allSprites.add(enemy)
     enemyGroup.add(enemy)
 
+player = Player()
 allSprites.add(player)
 
 
@@ -47,11 +55,13 @@ class Game:
     def __init__(self) -> None:
         pygame.init()
         self.isRunning = True
+
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_PATH)
-        self.saveFrogs = 0
         self.selectedScreen = screens.MAIN_MENU
+
+        self.saveFrogs = 0
         self.start_ticks = 0
         self.finishTime = 0
 
@@ -69,12 +79,19 @@ class Game:
     def initialize(self):
         self.start_ticks = 0
         self.saveFrogs = 0
-        player.life = 3
+        player.life = MAX_PLAYER_LIFE
+
+    def textWhite(self, text, size, x, y):
+        showText(self, text, size, WHITE, x, y)
+
+    def textBlack(self, text, size, x, y):
+        showText(self, text, size, BLACK, x, y)
 
     def main_menu(self):
         self.clock.tick(MAX_TICK)
         self.screen.fill(MEDIUMSEAGREEN)
 
+        # Logo
         logo = pygame.image.load(LOGO)
         logo_rect = logo.get_rect()
         logo = pygame.transform.scale(
@@ -83,19 +100,26 @@ class Game:
 
         self.screen.blit(logo, logo_rect)
 
-        mx, my = pygame.mouse.get_pos()
-        btn_start = showButton(self, DARKGREEN, WIDTH / 2.5, HEIGHT / 2 - 30)
-        btn_exit = showButton(self, DARKGREEN, WIDTH / 2.5, HEIGHT / 2 + 30)
-        showText(
-            self, f"Tempo da última partida: {self.finishTime} segundos!", 16, BLACK, WIDTH / 2 + 8, 120)
-        showText(self, 'START', 24, WHITE, WIDTH / 2 + 8, HEIGHT / 2 - 25)
-        showText(self, 'EXIT', 24, WHITE, WIDTH / 2 + 8, HEIGHT / 2 + 35)
-        showText(self, f"Esse jogo foi desenvolvido por",
-                 14, BLACK, WIDTH / 2, HEIGHT - 60)
-        showText(self, f"Jonas Brito, Estefanny David e Laryssa Bezerra",
-                 14, BLACK, WIDTH / 2, HEIGHT - 40)
+        # Half width and height
+        half_w = WIDTH / 2
+        half_h = HEIGHT / 2
+
+        # Buttons
+        btn_start = showButton(self, DARKGREEN, WIDTH / 2.5, half_h - 30)
+        btn_exit = showButton(self, DARKGREEN, WIDTH / 2.5, half_h + 30)
+        self.textWhite('START', 24, half_w + 8, half_h - 25)
+        self.textWhite('EXIT', 24, half_w + 8, half_h + 35)
+
+        self.textBlack(f"Tempo da última partida: {self.finishTime} segundos!",
+                       16, half_w + 8, 120)
+        self.textBlack(f"Esse jogo foi desenvolvido por",
+                       14, half_w, HEIGHT - 60)
+        self.textBlack(f"Jonas Brito, Estefanny David e Laryssa Bezerra",
+                       14, half_w, HEIGHT - 40)
 
         self.keys = pygame.key.get_pressed()
+        mx, my = pygame.mouse.get_pos()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exit()
@@ -116,12 +140,15 @@ class Game:
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (0, 0))
 
-        if (self.start_ticks == 0):
+        if self.start_ticks == 0:
             self.start_ticks = pygame.time.get_ticks()
 
-        showText(self, f"Vida: {player.life}", 11, WHITE, 20, HEIGHT - 12)
-        showText(
-            self, f"Tempo: {(pygame.time.get_ticks()-self.start_ticks)/1000}", 11, WHITE, 80, HEIGHT - 12)
+        if self.saveFrogs == 0:
+            savedFrogs.empty()
+
+        seconds = (pygame.time.get_ticks()-self.start_ticks)/1000
+        self.textWhite(f"Vida: {player.life}", 11, 20, HEIGHT - 12)
+        self.textWhite(f"Tempo: {seconds}", 11, 80, HEIGHT - 12)
 
         self.keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -133,14 +160,14 @@ class Game:
                     player.move(self.keys)
 
         if player.rect.y < 85:
-            enemy = Enemy(x=self.savePosX[self.saveFrogs], y=self.savePosY,
-                          player_speed=0, sprite_dir=FROG_SPRITE_DIR)
-            allSprites.add(enemy)
+            savedFrog = Enemy(x=self.savePosX[self.saveFrogs], y=self.savePosY,
+                              player_speed=0, sprite_dir=FROG_SPRITE_DIR)
+            savedFrogs.add(savedFrog)
             self.saveFrogs += 1
 
-            if self.saveFrogs == 5:
-                self.finishTime = (pygame.time.get_ticks() -
-                                   self.start_ticks)/1000
+            if self.saveFrogs == MAX_SAVE_FROGS:
+                self.finishTime = (
+                    pygame.time.get_ticks() - self.start_ticks)/1000
                 self.selectedScreen = screens.MAIN_MENU
 
             player.initialPosition()
@@ -149,6 +176,7 @@ class Game:
             player, enemyGroup, False, pygame.sprite.collide_mask)
 
         allSprites.draw(self.screen)
+        savedFrogs.draw(self.screen)
 
         if collision:
             player.loseLife()
