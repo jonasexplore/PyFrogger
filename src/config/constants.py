@@ -7,7 +7,11 @@ FLY_SPRITE_DIR = './src/resources/textures/fly2.png'
 FROG_SPRITE_DIR = './src/resources/textures/frog/frog_v2.png'
 
 PLAYER_SPEED = 38
+MAX_PLAYER_LIFE = 3
+MAX_SAVE_FROGS = 5
+
 SPRITE_POS_RESTART = 150
+
 FONT = 'arial'
 
 # Colors
