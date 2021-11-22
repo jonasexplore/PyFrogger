@@ -72,7 +72,6 @@ class Game:
         player.life = 3
 
     def main_menu(self):
-        self.initialize()
         self.clock.tick(MAX_TICK)
         self.screen.fill(MEDIUMSEAGREEN)
 
@@ -104,6 +103,7 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
                     if btn_start.collidepoint(mx, my):
+                        self.initialize()
                         self.selectedScreen = screens.START_GAME
 
                     if btn_exit.collidepoint(mx, my):
@@ -152,6 +152,9 @@ class Game:
 
         if collision:
             player.loseLife()
+            if player.life == 0:
+                self.initialize()
+                self.selectedScreen = screens.MAIN_MENU
             pass
         else:
             if player.life > 0:
