@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.sprites = []
         self.sprite_dir = FROG_SPRITES_DIR
         self.player_speed = PLAYER_SPEED
-        self.life = 3
+        self.life = MAX_PLAYER_LIFE
 
         self.x = 220
         self.y = 465
