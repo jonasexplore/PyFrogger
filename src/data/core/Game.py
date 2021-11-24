@@ -114,7 +114,7 @@ class Game:
                        16, half_w + 8, 120)
         self.textBlack(f"Esse jogo foi desenvolvido por",
                        14, half_w, HEIGHT - 60)
-        self.textBlack(f"Jonas Brito, Estefanny David e Laryssa Bezerra",
+        self.textBlack(f"Jonas Brito, Estefany David e Laryssa Bezerra",
                        14, half_w, HEIGHT - 40)
 
         self.keys = pygame.key.get_pressed()
