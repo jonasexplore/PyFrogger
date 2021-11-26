@@ -19,7 +19,6 @@ A mecânica do jogo era simples, onde o jogador controla um sapo que deve atrave
 - [x] Movimentação
 - [x] Colisão
 - [x] Enimigos
-- [ ] Ajustar tamanho das sprites
-- [ ] Criar sistema de vida
-- [ ] Criar menu inicial
-- [ ] Criar pontuação
+- [x] Ajustar tamanho das sprites
+- [x] Criar sistema de vida
+- [x] Criar menu inicial
